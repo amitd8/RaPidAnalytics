@@ -1,0 +1,88 @@
+Volatility 3 Framework 2.7.0
+
+PID     PPID    ImageFileName   Offset(V)       Threads Handles SessionId       Wow64   CreateTime      ExitTime    File output
+
+4       0       System  0xbe8e71087040  151     -       N/A     False   2020-09-19 01:24:07.000000      N/ADisabled
+92      4       Registry        0xbe8e710a6080  4       -       N/A     False   2020-09-19 01:24:04.000000 N/A      Disabled
+312     4       smss.exe        0xbe8e71d6d040  2       -       N/A     False   2020-09-19 01:24:07.000000 N/A      Disabled
+424     416     csrss.exe       0xbe8e74467140  10      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+500     416     wininit.exe     0xbe8e74519080  1       -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+616     500     services.exe    0xbe8e74575080  7       -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+656     500     lsass.exe       0xbe8e74fab080  11      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+764     616     svchost.exe     0xbe8e7560d240  28      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+784     500     fontdrvhost.ex  0xbe8e75611180  5       -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+884     616     svchost.exe     0xbe8e75648240  17      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+448     616     svchost.exe     0xbe8e75739240  63      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+520     616     svchost.exe     0xbe8e7573e2c0  32      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+904     616     svchost.exe     0xbe8e757762c0  15      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+968     616     svchost.exe     0xbe8e75778080  23      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+988     616     svchost.exe     0xbe8e7577a300  18      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+1096    616     svchost.exe     0xbe8e757b22c0  19      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+1136    616     svchost.exe     0xbe8e757e42c0  4       -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+1148    616     svchost.exe     0xbe8e75808240  17      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+1408    616     svchost.exe     0xbe8e758bd300  14      -       0       False   2020-09-19 01:24:08.000000 N/A      Disabled
+1576    616     svchost.exe     0xbe8e75998240  14      -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+1816    4       MemCompression  0xbe8e7112d040  54      -       N/A     False   2020-09-19 01:24:09.000000 N/A      Disabled
+1896    616     svchost.exe     0xbe8e75a54300  12      -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2040    616     svchost.exe     0xbe8e710d6080  3       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+1032    616     svchost.exe     0xbe8e75aea2c0  10      -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+1192    616     svchost.exe     0xbe8e75aef300  6       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2060    616     svchost.exe     0xbe8e75bbc2c0  6       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2188    616     spoolsv.exe     0xbe8e75c2c200  10      -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2248    616     svchost.exe     0xbe8e75c43240  9       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2364    616     vmtoolsd.exe    0xbe8e74364280  9       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2372    616     VGAuthService.  0xbe8e75cdd300  2       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2396    616     wlms.exe        0xbe8e75cde080  2       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2404    616     MsMpEng.exe     0xbe8e75ce0080  9       -       0       False   2020-09-19 01:24:09.000000 N/A      Disabled
+2952    616     dllhost.exe     0xbe8e7600a280  10      -       0       False   2020-09-19 01:24:11.000000 N/A      Disabled
+2548    764     WmiPrvSE.exe    0xbe8e75d97280  11      -       0       False   2020-09-19 01:24:11.000000 N/A      Disabled
+3520    616     msdtc.exe       0xbe8e763282c0  9       -       0       False   2020-09-19 01:24:13.000000 N/A      Disabled
+2684    616     svchost.exe     0xbe8e760b7080  7       -       0       False   2020-09-19 01:24:30.000000 N/A      Disabled
+2748    616     SgrmBroker.exe  0xbe8e7654b080  7       -       0       False   2020-09-19 01:26:10.000000 N/A      Disabled
+2208    616     svchost.exe     0xbe8e7654f240  1       -       0       False   2020-09-19 01:26:11.000000 N/A      Disabled
+2216    616     svchost.exe     0xbe8e76485300  11      -       0       False   2020-09-19 01:26:11.000000 N/A      Disabled
+3708    616     SearchIndexer.  0xbe8e762f3240  19      -       0       False   2020-09-19 01:26:11.000000 N/A      Disabled
+1608    616     svchost.exe     0xbe8e711952c0  3       -       0       False   2020-09-19 01:28:10.000000 N/A      Disabled
+4092    616     svchost.exe     0xbe8e77ee2080  4       -       0       False   2020-09-19 01:31:39.000000 N/A      Disabled
+4592    764     MicrosoftEdge.  0xbe8e770f0080  0       -       1       False   2020-09-19 03:16:05.000000 2020-09-19 03:17:00.000000       Disabled
+5664    616     SecurityHealth  0xbe8e79004280  14      -       0       False   2020-09-19 03:16:17.000000 N/A      Disabled
+6384    4084    csrss.exe       0xbe8e779b9080  11      -       2       False   2020-09-19 03:17:00.000000 N/A      Disabled
+6456    4084    winlogon.exe    0xbe8e773ef080  5       -       2       False   2020-09-19 03:17:00.000000 N/A      Disabled
+1768    6456    dwm.exe 0xbe8e78cab080  15      -       2       False   2020-09-19 03:17:01.000000      N/ADisabled
+4808    6456    fontdrvhost.ex  0xbe8e75cb4080  5       -       2       False   2020-09-19 03:17:01.000000 N/A      Disabled
+860     764     MicrosoftEdge.  0xbe8e790c2080  0       -       3       False   2020-09-19 03:36:40.000000 2020-09-19 03:44:52.000000       Disabled
+8324    4008    coreupdater.ex  0xbe8e7a447080  0       -       3       False   2020-09-19 03:40:49.000000 2020-09-19 03:43:10.000000       Disabled
+3232    448     sihost.exe      0xbe8e7767d080  20      -       2       False   2020-09-19 05:08:15.000000 N/A      Disabled
+1172    616     svchost.exe     0xbe8e778ef080  16      -       2       False   2020-09-19 05:08:15.000000 N/A      Disabled
+6756    448     taskhostw.exe   0xbe8e790d7080  11      -       2       False   2020-09-19 05:08:16.000000 N/A      Disabled
+5204    6456    userinit.exe    0xbe8e79130080  0       -       2       False   2020-09-19 05:08:16.000000 2020-09-19 05:08:42.000000       Disabled
+5896    5204    explorer.exe    0xbe8e764d7080  75      -       2       False   2020-09-19 05:08:16.000000 N/A      Disabled
+4096    1070858240              0xbe8e7607f080  4096    -       1217158537      False   1601-01-01 00:00:53.000000  1601-01-01 00:01:25.000000      Disabled
+4312    616     svchost.exe     0xbe8e789d0080  33      -       0       False   2020-09-19 05:08:16.000000 N/A      Disabled
+2904    764     dllhost.exe     0xbe8e757e2080  8       -       2       False   2020-09-19 05:08:18.000000 N/A      Disabled
+3388    616     svchost.exe     0xbe8e791ef080  6       -       2       False   2020-09-19 05:08:19.000000 N/A      Disabled
+4596    764     dllhost.exe     0xbe8e76099080  6       -       2       False   2020-09-19 05:08:20.000000 N/A      Disabled
+2084    764     StartMenuExper  0xbe8e78cbd080  8       -       2       False   2020-09-19 05:08:20.000000 N/A      Disabled
+4724    764     RuntimeBroker.  0xbe8e7930b340  12      -       2       False   2020-09-19 05:08:20.000000 N/A      Disabled
+4608    764     SearchApp.exe   0xbe8e77355340  42      -       2       False   2020-09-19 05:08:21.000000 N/A      Disabled
+8128    764     RuntimeBroker.  0xbe8e79e89340  16      -       2       False   2020-09-19 05:08:21.000000 N/A      Disabled
+5324    764     ApplicationFra  0xbe8e77969340  10      -       2       False   2020-09-19 05:08:21.000000 N/A      Disabled
+4948    764     MicrosoftEdge.  0xbe8e75cb3340  33      -       2       False   2020-09-19 05:08:21.000000 N/A      Disabled
+7172    764     browser_broker  0xbe8e7950b340  4       -       2       False   2020-09-19 05:08:21.000000 N/A      Disabled
+7508    764     RuntimeBroker.  0xbe8e74fac080  4       -       2       False   2020-09-19 05:08:22.000000 N/A      Disabled
+5392    764     MicrosoftEdgeC  0xbe8e776db080  15      -       2       False   2020-09-19 05:08:22.000000 N/A      Disabled
+4272    7508    MicrosoftEdgeS  0xbe8e78a7d080  9       -       2       False   2020-09-19 05:08:22.000000 N/A      Disabled
+3344    1148    ctfmon.exe      0xbe8e7712b080  10      -       2       False   2020-09-19 05:08:23.000000 N/A      Disabled
+8736    764     TextInputHost.  0xbe8e760750c0  11      -       2       False   2020-09-19 05:08:24.000000 N/A      Disabled
+8152    764     RuntimeBroker.  0xbe8e78e962c0  4       -       2       False   2020-09-19 05:08:25.000000 N/A      Disabled
+5256    764     smartscreen.ex  0xbe8e789c7080  8       -       2       False   2020-09-19 05:08:33.000000 N/A      Disabled
+356     5896    SecurityHealth  0xbe8e7642a080  7       -       2       False   2020-09-19 05:08:33.000000 N/A      Disabled
+6304    5896    vm3dservice.ex  0xbe8e75884080  1       -       2       False   2020-09-19 05:08:34.000000 N/A      Disabled
+7252    5896    vmtoolsd.exe    0xbe8e78f94080  6       -       2       False   2020-09-19 05:08:34.000000 N/A      Disabled
+508     1380    powershell.exe  0xbe8e75a2a080  0       -       2       False   2020-09-19 05:08:37.000000 2020-09-19 05:08:43.000000       Disabled
+8904    5896    OneDrive.exe    0xbe8e760f6080  25      -       2       True    2020-09-19 05:08:37.000000 N/A      Disabled
+7992    764     SystemSettings  0xbe8e790d1080  17      -       2       False   2020-09-19 05:08:38.000000 N/A      Disabled
+3316    508     powershell.exe  0xbe8e78dd1200  11      -       2       False   2020-09-19 05:08:43.000000 N/A      Disabled
+728     3316    conhost.exe     0xbe8e789ec080  2       -       2       False   2020-09-19 05:08:43.000000 N/A      Disabled
+5408    764     RuntimeBroker.  0xbe8e78cec080  0       -       2       False   2020-09-19 05:08:51.000000 2020-09-19 05:10:51.000000       Disabled
+4096    2079404032              0xbe8e78a40080  4096    -       2147484672      False   1601-01-01 00:00:35.000000  1601-01-01 00:02:34.000000      Disabled
