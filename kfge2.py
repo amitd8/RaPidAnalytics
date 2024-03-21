@@ -12,12 +12,22 @@ def enumeratePslist():
                     
     return pps
 
+def printhirerchyhelper(pid,apps):
+    if pid in apps:
+        return str(printhirerchy(apps[pid][0],apps)) + " --> " + apps[pid][1]+","+pid
 def printhirerchy(pid,apps):
-    if apps[pid][0] != 4 and apps[pid][0] in apps:
-        return str(printhirerchy(apps[pid][0],apps)) + " --> " + apps[pid][1]
-    
+        return str(printhirerchyhelper(pid,apps)).replace("None --> ","")
+
+# def findlegit pids
+
+# def for suspicous count
+
+# def for powershell anomalies
+
+
+
 x = enumeratePslist()
 
-print (printhirerchy ('4312',x))
+print (printhirerchy ('728',x))
         
 
