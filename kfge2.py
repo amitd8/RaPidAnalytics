@@ -11,8 +11,13 @@ def enumeratePslist():
                 pps[a[0]] = [a[1],a[2]]
                     
     return pps
-print (enumeratePslist())
-def printhirerchy(pid):
-    x = []
+
+def printhirerchy(pid,apps):
+    if apps[pid][0] != 4 and apps[pid][0] in apps:
+        return str(printhirerchy(apps[pid][0],apps)) + " --> " + apps[pid][1]
     
+x = enumeratePslist()
+
+print (printhirerchy ('4312',x))
+        
 
