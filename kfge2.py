@@ -1,15 +1,17 @@
-
-# Map a dictionery full of usful process data for later anomaly analysis
+import re, sys
+# Map a dictionery full of parsed process data for later anomaly analysis
+totalanalysis = ""
 def enumeratePslist():
     pps = {}
-    with open(".\outputest.txt", "r") as file:
+    with open(".\\outputs\\output1.txt", "r",encoding='utf-8') as file:
         # Iterate over each line in the file    
         
         for line in file:
-           if line.strip() and line[0].isdigit():
-                a = line.split() 
-                pps[a[0]] = [a[1],a[2]]
-                    
+           if line.strip():
+                if re.match(r'^\s*\d', line):
+                    a = line.split() 
+                    pps[a[0]] = [a[1],a[2]]
+                        
     return pps
 #  pid : [ppid,imagename]
 
@@ -110,10 +112,37 @@ def DetectMasquerading(apps):
         lines.insert(0, "Process Masquerading detections (T1036):")  
         return '\n'.join(lines)  
      else:
-        return analysis  
+        return analysis+ "\n   Clean!"
                          
+def DetectPersistences(apps):
+    analysis = ""
+    #winlogon Dll Helper
+    c,winlo = count_occurrences(apps,"winlogon.exe")   
+    uiproc = winlo[0]
+    for pid, a in apps.items():
+        if a[0] == uiproc and a[1] != "userinit.exe":
+            h = (printhirerchy(pid,apps))
+            analysis += "   "+h+"\n"+"   (High) Winlogon Persistence detected! (T1547) Winlogon executed Unfimilier Process Pid: "+pid+ "\n" 
+    # Schedule tasks related Executions
+    c,winlo = count_occurrences(apps,"schtasks.exe")   
+    uiproc = winlo[0]
+    for pid, a in apps.items():
+        h = (printhirerchy(pid,apps))
+        analysis += "   "+h+"\n"+"   (Low) Schedule task Persistence detected.(T1053) "+pid+ "\n" 
     
-                        
+    
+    
+    if analysis.strip():  
+        lines = analysis.split('\n')  
+        lines.insert(0, "Persistence detections:")  
+        return '\n'.join(lines)  
+    else:
+        return analysis+ "\n   Clean!"
+            
+
+
+def DetectDiscovery(apps):
+    print ("")                   
 
           
           
@@ -124,6 +153,7 @@ def DetectMasquerading(apps):
 
 x = enumeratePslist()
 print (DetectMasquerading(x))
+print (DetectPersistences(x))
 
 
         
