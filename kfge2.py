@@ -3,16 +3,21 @@ import re, sys
 totalanalysis = ""
 def enumeratePslist():
     pps = {}
-    with open(".\\outputs\\outputest.txt", "r",encoding='utf-8') as file:
-        # Iterate over each line in the file    
-        
+    with open(".\\outputs\\psscan.txt", "r",encoding='utf-8') as file:
+        # Iterate over each line in the file mapping data to dict  
         for line in file:
            if line.strip():
-                if re.match(r'^\s*\d', line):
+                # check if it pslist input
+                if re.match(r'^\s*(?!0)\d', line):
                     a = line.split() 
                     pps[a[0]] = [a[1],a[2]]
-                        
-    return pps
+                # check if psscan input
+                elif re.match(r'^0x', line):
+                    a = line.split() 
+                    pps[a[2]] = [a[3],a[1]]
+    if pps:            
+        return pps                
+    else:  return "Error in data input"
 #  pid : [ppid,imagename]
 
 def printhirerchyhelper(pid,apps):
@@ -20,9 +25,6 @@ def printhirerchyhelper(pid,apps):
         return str(printhirerchy(apps[pid][0],apps)) + " --> " + apps[pid][1]+"("+pid+")"
 def printhirerchy(pid,apps):
         return str(printhirerchyhelper(pid,apps)).replace("None --> ","")
-
-def findlegitpids():
-     print ("wow")
 
 def count_occurrences(apps, pname):
     count = 0
@@ -180,5 +182,6 @@ print (DetectDiscovery(x))
 print (DetectPersistences(x))
 print (DetectLOLBAS(x))
 
+ 
         
 
