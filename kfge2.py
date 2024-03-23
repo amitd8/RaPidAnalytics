@@ -1,20 +1,21 @@
 import re, sys
 # Map a dictionery full of parsed process data for later anomaly analysis
-totalanalysis = ""
-def enumeratePslist():
+
+def enumeratePslist(filedata):
+    
     pps = {}
-    with open(".\\outputs\\output1.txt", "r",encoding='utf-8') as file:
+    #with open(".\\outputs\\output1.txt", "r",encoding='utf-8') as file:
         # Iterate over each line in the file mapping data to dict  
-        for line in file:
-           if line.strip():
-                # check if it pslist input
-                if re.match(r'^\s*(?!0)\d', line):
-                    a = line.split() 
-                    pps[a[0]] = [a[1],a[2]]
-                # check if psscan input
-                elif re.match(r'^0x', line):
-                    a = line.split() 
-                    pps[a[2]] = [a[3],a[1]]
+    for line in filedata:
+        if line.strip():
+            # check if it pslist input
+            if re.match(r'^\s*(?!0)\d', line):
+                a = line.split() 
+                pps[a[0]] = [a[1],a[2]]
+            # check if psscan input
+            elif re.match(r'^0x', line):
+                a = line.split() 
+                pps[a[2]] = [a[3],a[1]]
     if pps:
         for k,v in pps.items():
             if re.match(r'^-?\d+\.?\d*$',k) and  re.match(r'^-?\d+\.?\d*$',v[0]):
@@ -169,7 +170,7 @@ def DetectLOLBAS(apps):
             analysis += "   "+h+"\n"+"   (Medium) LOLBAS often used by attackers. "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Suspicious LOBAS detections (T1059):")  
+        lines.insert(0, "Suspicious LOLBAS detections (T1059):")  
         return '\n'.join(lines)  
     else:
         return analysis
@@ -177,8 +178,20 @@ def DetectLOLBAS(apps):
 
 # ppidname = apps[apps[pid][0]][1]
 # def 
+if len(sys.argv) > 1:
+    # Checkin if input is from command-line arguments
+    input_data = sys.argv[1]
+    with open(input_data, "r", encoding='utf-8') as file:
+        # Read the contents of the file
+        filedata = file.readlines()  # Read lines into a list
+    # Check if input is provided through stdout
+else:
+    filedata = sys.stdin.readlines()  # Read lines from stdin
+    if not filedata:
+        print("Error: No input data was provided.")
 
-x = enumeratePslist()
+totalanalysis = ""
+x = enumeratePslist(filedata)
 print (DetectMasquerading(x))
 print (DetectDiscovery(x))
 print (DetectPersistences(x))
