@@ -3,7 +3,7 @@ import re, sys
 totalanalysis = ""
 def enumeratePslist():
     pps = {}
-    with open(".\\outputs\\psscan.txt", "r",encoding='utf-8') as file:
+    with open(".\\outputs\\output1.txt", "r",encoding='utf-8') as file:
         # Iterate over each line in the file mapping data to dict  
         for line in file:
            if line.strip():
@@ -15,8 +15,12 @@ def enumeratePslist():
                 elif re.match(r'^0x', line):
                     a = line.split() 
                     pps[a[2]] = [a[3],a[1]]
-    if pps:            
-        return pps                
+    if pps:
+        for k,v in pps.items():
+            if re.match(r'^-?\d+\.?\d*$',k) and  re.match(r'^-?\d+\.?\d*$',v[0]):
+                return pps
+            else:
+                return "Error in data input"              
     else:  return "Error in data input"
 #  pid : [ppid,imagename]
 
@@ -131,8 +135,6 @@ def DetectPersistences(apps):
         h = (printhirerchy(spid,apps))
         analysis += "   "+h+"\n"+"   (Low) Schedule task Persistence detected.(T1053) "+spid+ "\n"+"\n" 
     
-    
-    
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "Persistence detections:")  
@@ -155,7 +157,7 @@ def DetectDiscovery(apps):
         lines.insert(0, "Persistence detections:")  
         return '\n'.join(lines)  
     else:
-        return analysis+ "\n   Clean!"       
+        return analysis     
 
 def DetectLOLBAS(apps):
     analysis = ""
@@ -170,8 +172,8 @@ def DetectLOLBAS(apps):
         lines.insert(0, "Suspicious LOBAS detections (T1059):")  
         return '\n'.join(lines)  
     else:
-        return analysis+ "\n   Clean!"
-    print ("")                  
+        return analysis
+                     
 
 # ppidname = apps[apps[pid][0]][1]
 # def 
