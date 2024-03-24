@@ -115,7 +115,7 @@ def DetectMasquerading(apps):
             for pid in pids:
                 if apps[pid][0] in apps:
                         h = (printhierarchy(pid,apps))
-                        analysis += "   "+h+"\n"+"   Rough csrss.exe process detected! Pid: "+pid+", csrss.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+")\n"+"\n"
+                        analysis += "   "+h+"\n"+"   Rough csrss.exe process detected! Pid: "+pid+", explorer.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+")\n"+"\n"
      if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "Process Masquerading detections (T1036):")  
@@ -154,7 +154,7 @@ def DetectDiscovery(apps):
         c,pids = count_occurrences(apps,process)   
         for dis in pids:
             h = (printhierarchy(dis,apps))
-            analysis += "   "+h+"\n"+"   (Low) Might be an attacker learning about the enviroment.(T1053) "+dis+ "\n"+"\n" 
+            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+")Might be an attacker learning about the enviroment (T1053) "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "Persistence detections:")  
@@ -169,7 +169,7 @@ def DetectLOLBAS(apps):
         c,pids = count_occurrences(apps,process)   
         for dis in pids:
             h = (printhierarchy(dis,apps))
-            analysis += "   "+h+"\n"+"   (Medium) "+process+" is often used by attackers. "+dis+ "\n"+"\n"
+            analysis += "   "+h+"\n"+"   (Medium) "+process+"("+dis+") is often used by attackers " "\n"+"\n"
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "Suspicious LOLBAS detections (T1059):")  
@@ -196,6 +196,7 @@ def DetectPOP(apps):
 # ppidname = apps[apps[pid][0]][1]
 
 def Analysis():
+    filedata = None 
     if len(sys.argv) > 1:
         # Checkin if input is from command-line arguments
         input_data = sys.argv[1]
@@ -204,9 +205,10 @@ def Analysis():
             filedata = file.readlines()  # Read lines into a list
         # Check if input is provided through stdout
     else:
-        filedata = sys.stdin.readlines()  # Read lines from stdin
-        if not filedata:
-            print("Error: No input data was provided.")
+        if not sys.stdin.isatty():
+            filedata = sys.stdin.readlines()  # Read lines from stdin
+    if not filedata:
+        print("""Error: No input data was provided. Provide Process data from stdout or as argument (.\\path\\to\\psscan)""")
 
     totalanalysis = ""
     processdict = enumeratePslist(filedata)
@@ -216,7 +218,10 @@ def Analysis():
     totalanalysis += (DetectLOLBAS(processdict))
     totalanalysis += (DetectPOP(processdict))
 
-    return totalanalysis
+    if totalanalysis == "":
+        return "The modules used didn't detect suspicous activity"
+    else:
+        return totalanalysis
 if __name__ == "__main__":
     print (Analysis() )
         
