@@ -213,7 +213,7 @@ def Analysis():
         if not sys.stdin.isatty():
             filedata = sys.stdin.readlines()  # Read lines from stdin
     if not filedata:
-        print("""Error: No input data was provided. Provide Process data from stdout or as argument (.\\path\\to\\psscan)""")
+        print("""Error: No input data was provided. Provide Process data from stdin or as an argument (.\\path\\to\\psscan)""")
 
     totalanalysis = ""
     processdict = enumeratePslist(filedata)
