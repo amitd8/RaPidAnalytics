@@ -24,7 +24,7 @@ def enumeratePslist(filedata):
 # Printing a given process pid entire hierarchy 
 def printhierarchyhelper(pid,apps):
     if pid in apps:
-        print (pid)
+        #print (pid)
         return str(printhierarchy(apps[pid][0],apps)) + " --> " + apps[pid][1]+"("+pid+")"
 def printhierarchy(pid,apps):
         return str(printhierarchyhelper(pid,apps)).replace("None --> ","")
@@ -67,14 +67,13 @@ def DetectMasquerading(apps):
                     print (pids[pid])
                     if apps[pids[pid]][0] in apps:
                             h = (printhierarchy(pids[pid],apps))
-                            analysis += "   "+h+"\n"+"   Rough wininit.exe process detected! Pid: "+pids[pid]+", Wininit.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+")\n"+"\n"
+                            analysis += "   "+h+"\n"+"   Rough wininit.exe process detected! Pid: "+pids[pid]+", wininit.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pids[pid]][0]][1]+" ("+apps[apps[pids[pid]][0]][0]+")\n"+"\n"
         elif process == "csrss.exe":
             if count > 1:
                 for pid in range(1,len(pids)):
                     if apps[pids[pid]][0] in apps:
                             h = (printhierarchy(pids[pid],apps))
-                        
-                            analysis += "   "+h+"\n"+"   Rough csrss.exe process detected! Pid: "+pids[pid]+", Wininit.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+")\n"+"\n"
+                            analysis += "   "+h+"\n"+"   Rough csrss.exe process detected! Pid: "+pids[pid]+", csrss.exe usualy has an exited parent ,abnormal Parent: "+apps[apps[pids[pid]][0]][1]+" ("+apps[apps[pids[pid]][0]][0]+")\n"+"\n"
         elif process == "svchost.exe":
             for pid in pids:
                 if apps[pid][0] not in apps:
@@ -117,10 +116,11 @@ def DetectMasquerading(apps):
                         h = (printhierarchy(pid,apps))
                         analysis += "   "+h+"\n"+"   Rough lsaiso.exe process detected! Pid: "+pid+", abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+") "+ "\n"+"\n" 
         elif process == "explorer.exe":
-            for pid in pids:
-                if apps[pid][0] in apps:
-                        h = (printhierarchy(pid,apps))
-                        analysis += "   "+h+"\n"+"   Rough csrss.exe process detected! Pid: "+pid+", explorer.exe usualy has an exited parent ,abnormal Parent: "+ apps[apps[pid][0]][1]+" ("+apps[pid][0]+")\n"+"\n"
+            if count > 1:
+                for pid in range(1,len(pids)):
+                    if apps[pids[pid]][0] in apps:
+                            h = (printhierarchy(pids[pid],apps))
+                            analysis += "   "+h+"\n"+"   Rough explorer.exe process detected! Pid: "+pids[pid]+", explorer.exe usualy has an exited parent ,abnormal Parent: "+apps[apps[pids[pid]][0]][1]+" ("+apps[apps[pids[pid]][0]][0]+")\n"+"\n"
      if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "Process Masquerading detections (T1036):")  
@@ -217,7 +217,10 @@ def Analysis():
 
     totalanalysis = ""
     processdict = enumeratePslist(filedata)
-    print (printhierarchy("12508",processdict))
+    totalanalysis += DetectMasquerading(processdict)
+    totalanalysis += DetectLOLBAS(processdict)
+    totalanalysis += DetectDiscovery(processdict)
+    totalanalysis += DetectPersistences(processdict)
 
     if totalanalysis == "":
         return "The modules used didn't detect suspicous activity"
