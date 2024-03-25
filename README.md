@@ -1,7 +1,8 @@
-## **Welcome to RaPidAnalytics!** 
+# **Welcome to RaPidAnalytics!** 
+RaPidAnalytics is a Python script aimed to simplify Windows memory investigations. It quickly analyses outputs of process data from memory images using Volatility3's Pslist/Psscan modules or in real-time investigations with PowerShell.
 
-RaPidAnalytics is a Python script created to automate Memory Investigations on Windows operating systems by extracting data about running processes in a MemoryImage (using Volatility3's Pslist/Psscan modules) or in an ongoing live investigation (Using Powershell), detecting anomalies and providing valuable alerts & insights based on the collected data.
-``` python
+**With a focus on anomaly detection, it promptly provides alerts and insights, making DFIR investigators' lives easier.**
+``` 
 RaPidAnalytics Detections:
 
 - Process Masquerading detections (T1036):
@@ -14,37 +15,48 @@ RaPidAnalytics Detections:
    (Medium) powershell.exe(22928) is often used by attackers
 
 - Discovery detections:
-   wininit.exe(1248) --> nmap.exe(1356)
+   cmd.exe(1248) --> nmap.exe(1356)
    (Low) nmap.exe(1356)Might be an attacker learning about the enviroment (T1053) 
 ```
-The main module of the script is detecting Process Masquarding Detection - in which we use Windows OS's process gynolagy as a baseline to detect inconsistensies in Parent & Child processes heirerchy.
-As seen in the following sans poster, there are a con
+## Modules
+#### Process Masquarding Detection (High) - 
+The main module of the script, in which we use Windows OS' process gynolagy as a baseline to detect inconsistensies in Parent & Child processes heirerchies.
+As seen in the following [SANS poster](https://sansorg.egnyte.com/dl/oQm41D67D6), there are consistnt parent processes to most OS' essential processes. 
+Using that information, we can detect an attacker's attempt to run malware who masks itself as a legit windows process
+#### LOLBAS detection (Medium) -
+Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
+#### Discovery (Low) -
+Alerts about tools that are usually used by attackers in order to learn about the enviroment they're currently in, and are less likely to be used by noraml users.
+#### Persistence - 
+###### Schedule tasks running (low)
+Outputs process hierarchies that schtasks.exe were included in.
+###### Startup Processes (Medium)
+Detects processes created by winlogon.exe, indicates they run on system startup
 
-# Running RaPidAnalytics:
-Running `RaPidAnalytics.py` with no inputs from stdin or as an argument will result with an Error.
-``` python
-# Script Syntax for -Scope CurrentUser
-python.exe" .\PSlistAnalytics\RaPidAnalytics.py
-Error: No input data was provided. Provide Process data from stdout or as argument (.\path\to\psscan)
-```
 
+## Using RaPidAnalytics:
 #### -  Running with stdin from volatility 3 (For both pslist/psscan) 
 ``` python
 # Script Syntax for volatility3 input from stdin (pslist/psscan)
-python3 ./volatility3/vol.py -f ./memtest.mem windows.pslist | python3 ./PSlistAnalytics/RaPidAnalytics.py
+python3 ./volatility3/vol.py -f ./memtest.mem windows.pslist | python3 ./RaPidAnalytics/RaPidAnalytics.py
 
 ```
-
-#### -  Running with stdin from volatility 3 (For both pslist/psscan) 
+#### -  Live investigation Usage (Powershell)
 ``` powershell
-# Syntax for Analysis from Powershell in live investigation
-Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | python.exe .\PSlistAnalytics\RaPidAnalytics.py
-#Example output
-- Suspicious LOLBAS detections (T1059):canning finished
-   powershell.exe(508) --> powershell.exe(3316)
-   (Medium) powershell.exe(3316) is often used by attackers
+# Syntax for live Analysis using Powershell **Using other command than gcim or changing fields order will result in corrapted data**
+Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | python.exe .\RaPidAnalytics\RaPidAnalytics.py
+```
 
-- Persistence detections:
-   winlogon.exe(6456) --> notepad.exe(4808)
-   (High) Winlogon Persistence detected! (T1547) Winlogon executed Unfimilier Process Pid: 4808
+#### -  Supplying file path to output as argument
+``` python
+# live investigation- Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | Out-File -FilePath procout.txt -Encoding utf8
+# Volatility3 output- 
+python.exe" .\RaPidAnalytics\RaPidAnalytics.py ./procout.txt
+```
+
+##### Running `RaPidAnalytics.py` with no inputs from stdin or as an argument will result with an Error.
+``` python
+# Script Syntax for -Scope CurrentUser
+python.exe" .\RaPidAnalytics\RaPidAnalytics.py
+Error: No input data was provided. Provide Process data from stdout or as argument (.\path\to\psscan)
 ```
