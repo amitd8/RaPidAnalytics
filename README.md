@@ -20,18 +20,17 @@ RaPidAnalytics Detections:
 ```
 ## Modules
 #### Process Masquarding Detection (High) - 
-The main module of the script, in which we use Windows OS' process gynolagy as a baseline to detect inconsistensies in Parent & Child processes heirerchies.
-As seen in the following [SANS poster](https://sansorg.egnyte.com/dl/oQm41D67D6), there are consistnt parent processes to most OS' essential processes. 
-Using that information, we can detect an attacker's attempt to run malware who masks itself as a legit windows process
+The main module of the script, in which we use Windows OS' process genealogy as a baseline to detect inconsistencies in Parent & Child processes hierarchies.
+As seen in the following [SANS poster](https://sansorg.egnyte.com/dl/oQm41D67D6), there are consistent parent processes to most OS' essential processes. 
+Using that information, we can detect* an attacker's attempt to run malware which masks itself as a legit windows process.
 #### LOLBAS detection (Medium) -
 Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
 #### Discovery (Low) -
-Alerts about tools that are usually used by attackers in order to learn about the enviroment they're currently in, and are less likely to be used by noraml users.
+Alerts about tools that are commonly used by attackers to learn about the enviroment they're currently in, and are less likely to be used by noraml users.
 #### Persistence - 
-###### Schedule tasks running (low)
-Outputs process hierarchies that schtasks.exe were included in.
-###### Startup Processes (Medium)
-Detects processes created by winlogon.exe, indicates they run on system startup
+**Schedule tasks running (low)-** Outputs process hierarchies that schtasks.exe were included in.
+
+**Startup Processes (Medium)-** Detects processes created by winlogon.exe, indicates they run on system startup
 
 
 ## Using RaPidAnalytics:
@@ -50,13 +49,14 @@ Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | python
 #### -  Supplying file path to output as argument
 ``` python
 # live investigation- Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | Out-File -FilePath procout.txt -Encoding utf8
-# Volatility3 output- 
+# Volatility3 output- python3 ./volatility3/vol.py -f ./memtest.mem windows.pslist >> procout.txt
+
 python.exe" .\RaPidAnalytics\RaPidAnalytics.py ./procout.txt
 ```
 
 ##### Running `RaPidAnalytics.py` with no inputs from stdin or as an argument will result with an Error.
 ``` python
-# Script Syntax for -Scope CurrentUser
+# Error
 python.exe" .\RaPidAnalytics\RaPidAnalytics.py
 Error: No input data was provided. Provide Process data from stdout or as argument (.\path\to\psscan)
 ```
