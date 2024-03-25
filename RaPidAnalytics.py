@@ -159,7 +159,7 @@ def DetectDiscovery(apps):
         c,pids = count_occurrences(apps,process)   
         for dis in pids:
             h = (printhierarchy(dis,apps))
-            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+")Might be an attacker learning about the enviroment (T1053) "+dis+ "\n"+"\n" 
+            analysis += "   "+h+"\n"+"   (Low) "+process+" ("+dis+")Might be an attacker learning about the enviroment (T1053) ""\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Discovery detections:")  
@@ -169,7 +169,7 @@ def DetectDiscovery(apps):
 
 def DetectLOLBAS(apps):
     analysis = ""
-    proc = ["powershell.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","wmic.exe"]
+    proc = ["powershell.exe","wscript.exe","cscript.exe","mshta.exe","wmic.exe"]
     for process in proc:
         c,pids = count_occurrences(apps,process)   
         for dis in pids:
@@ -182,9 +182,9 @@ def DetectLOLBAS(apps):
     else:
         return analysis
 
-def DetectPOP(apps):
+def DetectPUA(apps):
     analysis = ""
-    proc = ["psexec.exe","nmap.exe","bloodhound.exe"]
+    proc = ["psexec.exe","bloodhound.exe"]
     for process in proc:
         c,pids = count_occurrences(apps,process)   
         for dis in pids:
