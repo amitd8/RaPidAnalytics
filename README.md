@@ -16,7 +16,7 @@ RaPidAnalytics Detections:
 
 - Discovery detections:
    cmd.exe(1248) --> nmap.exe(1356)
-   (Low) nmap.exe(1356)Might be an attacker learning about the enviroment (T1053) 
+   (Low) nmap.exe(1356) Might be an attacker learning about the enviroment (T1053) 
 ```
 ## Modules
 #### Process Masquarding Detection (High) - 
