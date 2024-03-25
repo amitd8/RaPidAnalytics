@@ -1,5 +1,5 @@
 # **Welcome to RaPidAnalytics!** 
-RaPidAnalytics is a Python script aimed to simplify Windows memory investigations. It quickly analyses outputs of process data from memory images using Volatility3's Pslist/Psscan modules or in real-time investigations with PowerShell.
+RaPidAnalytics is a Python script aimed to simplify Windows memory investigations. It quickly analyses outputs of process data from Volatility3's Pslist/Psscan modules or in real-time investigations by parsing PowerShell command's output.
 
 **With a focus on anomaly detection, it promptly provides alerts and insights, making DFIR investigators' lives easier.**
 ``` 
@@ -22,7 +22,7 @@ RaPidAnalytics Detections:
 #### Process Masquarding Detection (High) - 
 The main module of the script, in which we use Windows OS' process genealogy as a baseline to detect inconsistencies in Parent & Child processes hierarchies.
 As seen in the following [SANS poster](https://sansorg.egnyte.com/dl/oQm41D67D6), there are consistent parent processes to most OS' essential processes. 
-Using that information, we can detect* an attacker's attempt to run malware which masks itself as a legit windows process.
+Using that information, we can detect an attacker's attempt to run malware which masks itself as a legit windows process.
 #### LOLBAS detection (Medium) -
 Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
 #### Discovery (Low) -
@@ -31,7 +31,6 @@ Alerts about tools that are commonly used by attackers to learn about the enviro
 **Schedule tasks running (low)-** Outputs process hierarchies that schtasks.exe were included in.
 
 **Startup Processes (Medium)-** Detects processes created by winlogon.exe, indicates they run on system startup
-
 
 ## Using RaPidAnalytics:
 #### -  Running with stdin from volatility 3 (For both pslist/psscan) 
