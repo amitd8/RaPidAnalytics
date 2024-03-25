@@ -123,7 +123,7 @@ def DetectMasquerading(apps):
                             analysis += "   "+h+"\n"+"   Rough explorer.exe process detected! Pid: "+pids[pid]+", explorer.exe usualy has an exited parent ,abnormal Parent: "+apps[apps[pids[pid]][0]][1]+" ("+apps[apps[pids[pid]][0]][0]+")\n"+"\n"
      if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Process Masquerading detections (T1036):")  
+        lines.insert(0, "- Process Masquerading detections (T1036):")  
         return '\n'.join(lines)  
      else:
         return analysis
@@ -145,7 +145,7 @@ def DetectPersistences(apps):
     
     if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Persistence detections:")  
+        lines.insert(0, "- Persistence detections:")  
         return '\n'.join(lines)  
     else:
         return analysis
@@ -162,7 +162,7 @@ def DetectDiscovery(apps):
             analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+")Might be an attacker learning about the enviroment (T1053) "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Persistence detections:")  
+        lines.insert(0, "- Discovery detections:")  
         return '\n'.join(lines)  
     else:
         return analysis     
@@ -177,7 +177,7 @@ def DetectLOLBAS(apps):
             analysis += "   "+h+"\n"+"   (Medium) "+process+"("+dis+") is often used by attackers " "\n"+"\n"
     if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Suspicious LOLBAS detections (T1059):")  
+        lines.insert(0, "- Suspicious LOLBAS detections (T1059):")  
         return '\n'.join(lines)  
     else:
         return analysis
@@ -192,7 +192,7 @@ def DetectPOP(apps):
             analysis += "   "+h+"\n"+"   (Low) "+process+" is often used by attackers. "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
-        lines.insert(0, "Suspicious Tool Invocation:")  
+        lines.insert(0, "- Suspicious Tool Invocation:")  
         return '\n'.join(lines)  
     else:
         return analysis
@@ -225,7 +225,7 @@ def Analysis():
     if totalanalysis == "":
         return "The modules used didn't detect suspicous activity"
     else:
-        return totalanalysis
+        return "\nRaPidAnalytics Detections:" +"\n\n"+totalanalysis
 if __name__ == "__main__":
     print (Analysis() )
         
