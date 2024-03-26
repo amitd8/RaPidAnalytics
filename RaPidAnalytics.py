@@ -1,26 +1,27 @@
 import re, sys
 
-# Map a dictionery full of parsed process data for later anomaly analysis
-def enumeratePslist(filedata):
-    pps = {}
-    for line in filedata:
+# Map a dictionery full of parsed process data for later anomaly analysis. PIDFile - psscan/pslist/Win32_process.readlines() saved as a variable
+def EnumerateProcessData(PIDFile):
+    processdict = {}    #  processdict - Dictionary that will be built in the following format - pid : [ppid,imagename]
+    for line in PIDFile:
         if line.strip():
-            # check if it pslist input
-            if re.match(r'^\s*(?!0)\d', line):
+            # check line for pslist/Win32_process format (first column is PID), enrich dictionary using the current line
+            if re.match(r'^\s*(?!0)\d', line): 
                 a = line.split() 
-                pps[a[0]] = [a[1],a[2]]
-            # check if psscan input
+                processdict[a[0]] = [a[1],a[2]] 
+            # check line for psscan format (first column is Physical memory location), enrich dictionary using the current line
             elif re.match(r'^0x', line):
                 a = line.split() 
-                pps[a[2]] = [a[3],a[1]]
-    if pps:
-        for k,v in pps.items():
+                processdict[a[2]] = [a[3],a[1]] 
+    if processdict: # Check if the dictionary was enriched successfully
+        for k,v in processdict.items():
             if re.match(r'^-?\d+\.?\d*$',k) and  re.match(r'^-?\d+\.?\d*$',v[0]):
-                return pps
+                return processdict
             else:
-                return "Error in data input"              
-    else:  return "Error in data input"
-#  pid : [ppid,imagename]
+                return "Parsing Error: Input data not in the right format"              
+    else:  
+        return "Parsing Error: Input data not in the right format"
+
 # Printing a given process pid entire hierarchy 
 def printhierarchyhelper(pid,apps):
     if pid in apps:
@@ -201,22 +202,22 @@ def DetectPUA(apps):
 # ppidname = apps[apps[pid][0]][1]
 
 def Analysis():
-    filedata = None 
+    inputdata = None 
+     # Checkin if input is from command-line arguments
     if len(sys.argv) > 1:
-        # Checkin if input is from command-line arguments
         input_data = sys.argv[1]
         with open(input_data, "r", encoding='utf-8') as file:
-            # Read the contents of the file
-            filedata = file.readlines()  # Read lines into a list
-        # Check if input is provided through stdout
+            inputdata = file.readlines()  
     else:
+        # Check if input is provided through stdin
         if not sys.stdin.isatty():
-            filedata = sys.stdin.readlines()  # Read lines from stdin
-    if not filedata:
+            inputdata = sys.stdin.readlines()
+    # Check if no data was collected and pring Error
+    if not inputdata:
         print("""Error: No input data was provided. Provide Process data from stdin or as an argument (.\\path\\to\\psscan)""")
 
     totalanalysis = ""
-    processdict = enumeratePslist(filedata)
+    processdict   =  EnumerateProcessData(inputdata)
     totalanalysis += DetectMasquerading(processdict)
     totalanalysis += DetectLOLBAS(processdict)
     totalanalysis += DetectDiscovery(processdict)
@@ -226,6 +227,7 @@ def Analysis():
         return "The modules used didn't detect suspicous activity"
     else:
         return "\nRaPidAnalytics Detections:" +"\n\n"+totalanalysis
+    
 if __name__ == "__main__":
     print (Analysis() )
         
