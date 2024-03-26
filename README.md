@@ -26,11 +26,11 @@ Using that information, we can detect an attacker's attempt to run malware which
 #### LOLBAS detection (Medium) -
 Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
 #### Discovery (Low) -
-Alerts about tools that are commonly used by attackers to learn about the enviroment they're currently in, and are less likely to be used by noraml users.
+Alerts about tools that are commonly used by attackers to learn about the enviroment they're currently in, and are less likely to be used by regular users.
 #### Persistence - 
-**Schedule tasks running (low)-** Outputs process hierarchies that schtasks.exe were included in.
+Schedule tasks running (low)- Outputs process hierarchies that schtasks.exe were included in.
 
-**Startup Processes (Medium)-** Detects processes created by winlogon.exe, indicates they run on system startup
+Startup Processes (Medium)- Detects processes created by winlogon.exe, indicates they run on system startup
 
 ## Using RaPidAnalytics:
 #### -  Running with stdin from volatility 3 (For both pslist/psscan) 
