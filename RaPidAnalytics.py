@@ -42,100 +42,35 @@ def count_occurrences(PIDsDict, pname):
 def DetectMasquerading(PIDsDict):
      analysis = ""
      # Monitored for unfimiliar parent processes
-     MonitoredProcesses = ["lsass.exe","services.exe","RuntimeBroker.exe","taskhostw.exe","svchost.exe","winlogon.exe","lsaiso.exe"]
+     MonitoredProcesses = { "lsass.exe":"wininit.exe", "services.exe":"wininit.exe"
+                            ,"RuntimeBroker.exe":"svchost.exe", "taskhostw.exe":"svchost.exe",
+                            "svchost.exe":"services.exe","lsaiso.exe":"wininit.exe"
+                            }
      # Monitored for not having Exited parent process
-     MonitoredProcessesExited = ["wininit.exe","csrss.exe","explorer.exe"]
-     for process in MonitoredProcesses:
+     MonitoredProcessesExited = ["wininit.exe","csrss.exe","explorer.exe","winlogon.exe"]
+     for process,pprocess in MonitoredProcesses.items():
         count, pids = count_occurrences(PIDsDict,process)   
         for pid in pids:
             parentpid = PIDsDict[pid][0]
-            if process == "lsass.exe":
-                if parentpid not in PIDsDict:
+            if parentpid not in PIDsDict:
+                hierarchy = (printhierarchy(pid,PIDsDict))
+                analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+"("+pid+") process detected! None-Existing Parent: "+ parentpid+ "\n"+"\n"
+            else:
+                if PIDsDict[parentpid][1] != pprocess:
+                    parentname = PIDsDict[parentpid][1]
                     hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "wininit.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
-
-            elif process == "services.exe":
-                if parentpid not in PIDsDict:
-                    hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "wininit.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
-            
-            elif process == "svchost.exe":
-                if parentpid not in PIDsDict:
-                    hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "services.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
-            
-            elif process == "RuntimeBroker.exe":
-                if parentpid not in PIDsDict:
-                    hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "svchost.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
-            
-            elif process == "taskhostw.exe":
-                if parentpid not in PIDsDict:
-                    hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "svchost.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
-            
-            elif process == "lsaiso.exe":
-            
-                if parentpid not in PIDsDict:
-                    hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Rough "+process+" process detected! Pid: "+pid+", None-Existing Parent: "+ parentpid+ "\n"+"\n"
-                else:
-                    if PIDsDict[parentpid][1] != "wininit.exe":
-                        parentname = PIDsDict[parentpid][1]
-                        hierarchy = (printhierarchy(pid,PIDsDict))
-                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pid+") process detected! abnormal Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n" 
+                    analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+"("+pid+") process detected! it has unfimiliar Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
 
      for process in MonitoredProcessesExited:
         count, pids = count_occurrences(PIDsDict,process)   
         if count > 1:
             for pid in range(1,len(pids)):
                 parentpid = PIDsDict[pids[pid]][0]
-                if process == "wininit.exe":
-                    if parentpid in PIDsDict:
-                            parentname = PIDsDict[parentpid][1]
-                            hierarchy = (printhierarchy(pids[pid],PIDsDict))
-                            analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pids[pid]+") process detected! "+process+" usualy has an exited parent ,abnormal Parent: "+ parentname+" ("+parentpid+")\n"+"\n"
-                elif process == "csrss.exe":
-                    if parentpid in PIDsDict:
-                            parentname = PIDsDict[parentpid][1]
-                            hierarchy = (printhierarchy(pids[pid],PIDsDict))
-                            analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pids[pid]+") process detected! "+process+" usualy has an exited parent ,abnormal Parent: "+ parentname+" ("+parentpid+")\n"+"\n"
-                elif process == "explorer.exe":
-                    if parentpid in PIDsDict:
-                            parentname = PIDsDict[parentpid][1]
-                            hierarchy = (printhierarchy(pids[pid],PIDsDict))
-                            analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pids[pid]+") process detected! "+process+" usualy has an exited parent ,abnormal Parent: "+ parentname+" ("+parentpid+")\n"+"\n"
-                elif process == "winlogon.exe":
-                    if parentpid in PIDsDict:
-                            parentname = PIDsDict[parentpid][1]
-                            hierarchy = (printhierarchy(pids[pid],PIDsDict))
-                            analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+" ("+pids[pid]+") process detected! "+process+" usualy has an exited parent ,abnormal Parent: "+ parentname+" ("+parentpid+")\n"+"\n"
-                    
+                if parentpid in PIDsDict:
+                        parentname = PIDsDict[parentpid][1]
+                        hierarchy = (printhierarchy(pids[pid],PIDsDict))
+                        analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+"("+pids[pid]+") process detected! "+process+" usualy has an exited parent ,abnormal Parent: "+ parentname+" ("+parentpid+")\n"+"\n"
+                
      if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Process Masquerading detections (T1036):")  
@@ -174,7 +109,7 @@ def DetectDiscovery(PIDsDict):
         c,pids = count_occurrences(PIDsDict,process)   
         for dis in pids:
             h = (printhierarchy(dis,PIDsDict))
-            analysis += "   "+h+"\n"+"   (Low) "+process+" ("+dis+")Might be an attacker learning about the enviroment (T1053) ""\n"+"\n" 
+            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+") Might be an attacker learning about the enviroment (T1053) ""\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Discovery detections:")  
@@ -204,7 +139,7 @@ def DetectPUA(PIDsDict):
         c,pids = count_occurrences(PIDsDict,process)   
         for dis in pids:
             h = (printhierarchy(dis,PIDsDict))
-            analysis += "   "+h+"\n"+"   (Low) "+process+" is often used by attackers. "+dis+ "\n"+"\n" 
+            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+") is often used by attackers. "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Suspicious Tool Invocation:")  
