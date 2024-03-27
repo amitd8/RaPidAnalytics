@@ -3,19 +3,19 @@ import re, sys
 # Map a dictionery full of parsed process data for later anomaly analysis. PIDFile - psscan/pslist/Win32_process.readlines() saved as a variable
 def EnumerateProcessData(PIDFile):
     PIDsDict = {}    #  PIDsDict - Dictionary that will be built in the following format - pid : [ppid,imagename]
-    for line in PIDFile:
-        if line.strip():
-            # check line for pslist/Win32_process format (first column is PID), enrich dictionary using the current line
-            if re.match(r'^\s*(?!0)\d', line): 
-                a = line.split() 
-                PIDsDict[a[0]] = [a[1],a[2]] 
+    for procline in PIDFile:
+        if procline.strip():
+            # check line for pslist/Win32_process format (if first column is a PID), enrich dictionary using the current line
+            if re.match(r'^\s*(?!0)\d', procline): 
+                procwords = procline.split() 
+                PIDsDict[procwords[0]] = [procwords[1],procwords[2]] 
             # check line for psscan format (first column is Physical memory location), enrich dictionary using the current line
-            elif re.match(r'^0x', line):
-                a = line.split() 
-                PIDsDict[a[2]] = [a[3],a[1]] 
+            elif re.match(r'^0x', procline):
+                procwords = procline.split() 
+                PIDsDict[procwords[2]] = [procwords[3],procwords[1]] 
     if PIDsDict: # Check if the dictionary was enriched successfully
-        for k,v in PIDsDict.items():
-            if re.match(r'^-?\d+\.?\d*$',k) and  re.match(r'^-?\d+\.?\d*$',v[0]):
+        for pid,ppid_name in PIDsDict.items():
+            if re.match(r'^-?\d+\.?\d*$',pid) and  re.match(r'^-?\d+\.?\d*$',ppid_name[0]):
                 return PIDsDict
             else:
                 return "Parsing Error: Input data not in the right format"              
@@ -82,16 +82,16 @@ def DetectPersistences(PIDsDict):
     analysis = ""
     #winlogon Dll Helper
     c,winlo = count_occurrences(PIDsDict,"winlogon.exe")   
-    uiproc = winlo[0]
+    wiproc = winlo[0]
     for pid, a in PIDsDict.items():
-        if a[0] == uiproc and (a[1] not in ("userinit.exe", "dwm.exe","fontdrvhost.exe")):
-            h = (printhierarchy(pid,PIDsDict))
-            analysis += "   "+h+"\n"+"   (High) Winlogon Persistence detected! (T1547) Winlogon executed Unfimilier Process Pid: "+pid+ "\n"+"\n" 
+        if a[0] == wiproc and (a[1] not in ("userinit.exe", "dwm.exe","fontdrvhost.exe")):
+            hierarchy = (printhierarchy(pid,PIDsDict))
+            analysis += "   "+hierarchy+"\n"+"   (High) Winlogon Persistence detected! (T1547) Winlogon executed Unfimilier Process Pid: "+pid+ "\n"+"\n" 
     # Schedule tasks related Executions
     c,schpid = count_occurrences(PIDsDict,"schtasks.exe")   
     for spid in schpid:
-        h = (printhierarchy(spid,PIDsDict))
-        analysis += "   "+h+"\n"+"   (Low) Schedule task Persistence detected.(T1053) "+spid+ "\n"+"\n" 
+        hierarchy = (printhierarchy(spid,PIDsDict))
+        analysis += "   "+hierarchy+"\n"+"   (Low) Schedule task Persistence detected.(T1053) "+spid+ "\n"+"\n" 
     
     if analysis.strip():  
         lines = analysis.split('\n')  
@@ -108,8 +108,8 @@ def DetectDiscovery(PIDsDict):
     for process in proc:
         c,pids = count_occurrences(PIDsDict,process)   
         for dis in pids:
-            h = (printhierarchy(dis,PIDsDict))
-            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+") Might be an attacker learning about the enviroment (T1053) ""\n"+"\n" 
+            hierarchy = (printhierarchy(dis,PIDsDict))
+            analysis += "   "+hierarchy+"\n"+"   (Low) "+process+"("+dis+") Might be an attacker learning about the enviroment (T1053) ""\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Discovery detections:")  
@@ -123,8 +123,8 @@ def DetectLOLBAS(PIDsDict):
     for process in proc:
         c,pids = count_occurrences(PIDsDict,process)   
         for dis in pids:
-            h = (printhierarchy(dis,PIDsDict))
-            analysis += "   "+h+"\n"+"   (Medium) "+process+"("+dis+") is often used by attackers " "\n"+"\n"
+            hierarchy = (printhierarchy(dis,PIDsDict))
+            analysis += "   "+hierarchy+"\n"+"   (Medium) "+process+"("+dis+") is often used by attackers " "\n"+"\n"
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Suspicious LOLBAS detections (T1059):")  
@@ -138,8 +138,8 @@ def DetectPUA(PIDsDict):
     for process in proc:
         c,pids = count_occurrences(PIDsDict,process)   
         for dis in pids:
-            h = (printhierarchy(dis,PIDsDict))
-            analysis += "   "+h+"\n"+"   (Low) "+process+"("+dis+") is often used by attackers. "+dis+ "\n"+"\n" 
+            hierarchy = (printhierarchy(dis,PIDsDict))
+            analysis += "   "+hierarchy+"\n"+"   (Low) "+process+"("+dis+") is often used by attackers. "+dis+ "\n"+"\n" 
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Suspicious Tool Invocation:")  
