@@ -48,7 +48,7 @@ Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | python
 #### -  Supplying file path to output as argument
 ``` python
 # live investigation- Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | Out-File -FilePath procout.txt -Encoding utf8
-# Volatility3 output- python3 ./volatility3/vol.py -f ./memtest.mem windows.pslist >> procout.txt
+# Volatility3 output- python3 ./volatility3/vol.py -f ./memtest.mem windows.psscan >> procout.txt
 
 python.exe" .\RaPidAnalytics\RaPidAnalytics.py ./procout.txt
 ```
