@@ -16,7 +16,7 @@ RaPidAnalytics Detections:
 
 - Discovery detections:
    cmd.exe(1248) --> nmap.exe(1356)
-   (Low) nmap.exe(1356) Might be an attacker learning about the enviroment (T1053) 
+   (Low) nmap.exe(1356) Might be an attacker learning about the environment  (T1053) 
 ```
 ## Modules
 #### Process Masquarding Detection (High) - 
@@ -26,7 +26,7 @@ Using that information, we can detect an attacker's attempt to run malware which
 #### LOLBAS detection (Medium) -
 Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
 #### Discovery (Low) -
-Alerts about tools that are commonly used by attackers to learn about the enviroment they're currently in, and are less likely to be used by regular users.
+Alerts about tools that are commonly used by attackers to learn about the environment  they're currently in, and are less likely to be used by regular users.
 #### Persistence - 
 Schedule tasks running (low)- Outputs process hierarchies that schtasks.exe were included in.
 
@@ -41,7 +41,7 @@ python3 ./volatility3/vol.py -f ./memtest.mem windows.pslist | python3 ./RaPidAn
 ```
 #### -  Live investigation Usage (Powershell)
 ``` powershell
-# Syntax for live Analysis using Powershell **Using other command than gcim or changing fields order will result in corrapted data**
+# Syntax for live Analysis using Powershell **Using other command than gcim or changing fields order will result in corrupted data**
 Get-CimInstance Win32_Process | select ProcessId, ParentProcessId, name | python.exe .\RaPidAnalytics\RaPidAnalytics.py
 ```
 
