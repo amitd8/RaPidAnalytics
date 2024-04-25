@@ -6,17 +6,20 @@ RaPidAnalytics is a Python script aimed to simplify Windows memory investigation
 RaPidAnalytics Detections:
 
 - Process Masquerading detections (T1036):
-
-   explorer.exe(13548) --> svchost.exe(14720)
-   Rough svchost.exe process detected! Pid: 14720, abnormal Parent (not services.exe): explorer.exe (13548)
+   explorer.exe(14480) --> svchost.exe(20700)
+   Suspicous svchost.exe(20700) process detected! unfamiliar Parent detected: explorer.exe (14480)
 
 - Suspicious LOLBAS detections (T1059):
-   explorer.exe(13548) --> powershell.exe(22928)
-   (Medium) powershell.exe(22928) is often used by attackers
+   explorer.exe(14480) --> chrome.exe(20808) --> mshta.exe(19964)
+   (Medium) mshta.exe(19964) is a LOLBAS commonly used used by attackers
 
-- Discovery detections:
-   cmd.exe(1248) --> nmap.exe(1356)
-   (Low) nmap.exe(1356) Might be an attacker learning about the environment  (T1053) 
+- Persistence detections:
+   schtasks.exe(9808) --> powershell.exe(21020)
+   (Low) Schedule task Persistence detected.(T1053) -PID: 21020
+
+- Suspicious Tool Invocation:
+   explorer.exe(14480) --> bloodhound.exe(3608)
+   (Low) bloodhound.exe(3608) is often used by attackers. 3608
 ```
 ## Modules
 #### Process Masquarding Detection (High) - 
@@ -26,11 +29,13 @@ Using that information, we can detect an attacker's attempt to run malware which
 #### LOLBAS detection (Medium) -
 Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLBAS-Project/LOLBAS/blob/master/README.md), that are commonly used by attackers.
 #### Discovery (Low) -
-Alerts about tools that are commonly used by attackers to learn about the environment  they're currently in, and are less likely to be used by regular users.
+Alerts about tools that are commonly used by attackers to learn about the environment they're currently in, and are less likely to be used by regular users.
 #### Persistence - 
+Winlogon DLL Helper (Medium)- Detects processes created by winlogon.exe, indicates they run on system startup
+
 Schedule tasks running (low)- Outputs process hierarchies that schtasks.exe were included in.
 
-Startup Processes (Medium)- Detects processes created by winlogon.exe, indicates they run on system startup
+
 
 ## Using RaPidAnalytics:
 #### -  Running with stdin from volatility 3 (For both pslist/psscan) 
