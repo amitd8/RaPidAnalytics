@@ -38,7 +38,7 @@ def count_occurrences(PIDsDict, pname):
         if ppidname[1] == pname:
             pids.append(pid)
     return len(pids), pids
-
+# Detect Masquerding related anomalies by finding inconsistencies in Process and coresponding ParentProcess 
 def DetectMasquerading(PIDsDict):
      analysis = ""
      # Monitored for unfimiliar parent processes
@@ -80,7 +80,7 @@ def DetectMasquerading(PIDsDict):
                          
 def DetectPersistences(PIDsDict):
     analysis = ""
-    #winlogon Dll Helper
+    # Winlogon Dll Helper, 
     c,winlo = count_occurrences(PIDsDict,"winlogon.exe")   
     wiproc = winlo[0]
     for pid, a in PIDsDict.items():

@@ -28,9 +28,11 @@ Alerts about seen [Living of the land binaries (LOLBAS)](https://github.com/LOLB
 #### Discovery (Low) -
 Alerts about tools that are commonly used by attackers to learn about the environment  they're currently in, and are less likely to be used by regular users.
 #### Persistence - 
+
+Winlogon DLL Helper (Medium)- Detects processes created by winlogon.exe, indicates they run on system startup
 Schedule tasks running (low)- Outputs process hierarchies that schtasks.exe were included in.
 
-Startup Processes (Medium)- Detects processes created by winlogon.exe, indicates they run on system startup
+
 
 ## Using RaPidAnalytics:
 #### -  Running with stdin from volatility 3 (For both pslist/psscan) 
