@@ -1,5 +1,5 @@
 # **Welcome to RaPidAnalytics!** 
-RaPidAnalytics is a Python script aimed to simplify Windows memory investigations. It quickly analyses outputs of process data from Volatility3's Pslist/Psscan modules or in real-time investigations by parsing PowerShell command's output.
+RaPidAnalytics is a Python script aimed to simplify Windows memory investigations. It quickly analyzes outputs of process data from Volatility3's Pslist/Psscan modules or in real-time investigations by parsing formatted PowerShell output. It then provides simple insights and alerts that may indicate malicous activity.
 
 **With a focus on anomaly detection, it promptly provides alerts and insights, making DFIR investigators' lives easier.**
 ``` 
