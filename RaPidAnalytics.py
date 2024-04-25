@@ -41,7 +41,7 @@ def count_occurrences(PIDsDict, pname):
 # Detect Masquerding related anomalies by finding inconsistencies in Process and coresponding ParentProcess 
 def DetectMasquerading(PIDsDict):
      analysis = ""
-     # Monitored for unfimiliar parent processes
+     # Monitored for unfamiliar parent processes
      MonitoredProcesses = { "lsass.exe":"wininit.exe", "services.exe":"wininit.exe"
                             ,"RuntimeBroker.exe":"svchost.exe", "taskhostw.exe":"svchost.exe",
                             "svchost.exe":"services.exe","lsaiso.exe":"wininit.exe"
@@ -59,7 +59,7 @@ def DetectMasquerading(PIDsDict):
                 if PIDsDict[parentpid][1] != pprocess:
                     parentname = PIDsDict[parentpid][1]
                     hierarchy = (printhierarchy(pid,PIDsDict))
-                    analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+"("+pid+") process detected! it has unfimiliar Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
+                    analysis += "   "+hierarchy+"\n"+"   Suspicous "+process+"("+pid+") process detected! unfamiliar Parent detected: "+ parentname+" ("+parentpid+") "+ "\n"+"\n"
 
      for process in MonitoredProcessesExited:
         count, pids = count_occurrences(PIDsDict,process)   
@@ -83,16 +83,17 @@ def DetectPersistences(PIDsDict):
     # Winlogon Dll Helper, 
     c,winlo = count_occurrences(PIDsDict,"winlogon.exe")   
     wiproc = winlo[0]
-    for pid, a in PIDsDict.items():
-        if a[0] == wiproc and (a[1] not in ("userinit.exe", "dwm.exe","fontdrvhost.exe")):
+    for pid, pnn in PIDsDict.items():
+        if pnn[0] == wiproc and (pnn[1] not in ("userinit.exe", "dwm.exe","fontdrvhost.exe")):
             hierarchy = (printhierarchy(pid,PIDsDict))
-            analysis += "   "+hierarchy+"\n"+"   (High) Winlogon Persistence detected! (T1547) Winlogon executed Unfimilier Process Pid: "+pid+ "\n"+"\n" 
+            analysis += "   "+hierarchy+"\n"+"   (High) Winlogon Persistence detected! (T1547) Winlogon executed unfamiliar Process -PID: "+pid+ "\n"+"\n" 
     # Schedule tasks related Executions
-    c,schpid = count_occurrences(PIDsDict,"schtasks.exe")   
-    for spid in schpid:
-        hierarchy = (printhierarchy(spid,PIDsDict))
-        analysis += "   "+hierarchy+"\n"+"   (Low) Schedule task Persistence detected.(T1053) "+spid+ "\n"+"\n" 
-    
+    c,schpids = count_occurrences(PIDsDict,"schtasks.exe")   # Find all Schtasks processes PIDs
+    for pid, pnn in PIDsDict.items():
+        if pnn[0] in schpids:   
+            hierarchy = (printhierarchy(pid,PIDsDict))
+            analysis += "   "+hierarchy+"\n"+"   (Low) Schedule task Persistence detected.(T1053) -PID: "+pid+ "\n"+"\n" 
+        
     if analysis.strip():  
         lines = analysis.split('\n')  
         lines.insert(0, "- Persistence detections:")  
@@ -101,7 +102,7 @@ def DetectPersistences(PIDsDict):
         return analysis
             
 
-
+# Detect tools and LOLBAS (Living Off The Land Binaries and Scripts) commonly used by attackers to enumerate the victim's environment.
 def DetectDiscovery(PIDsDict):
     analysis = ""
     proc = ["findstr.exe","net.exe","ping.exe","nmap.exe","hostname.exe","whoami.exe"]
@@ -115,8 +116,9 @@ def DetectDiscovery(PIDsDict):
         lines.insert(0, "- Discovery detections:")  
         return '\n'.join(lines)  
     else:
-        return analysis     
-
+        return analysis    
+ 
+# Detect tools and LOLBAS (Living Off The Land Binaries and Scripts) commonly used by attackers to run malicous scripts.
 def DetectLOLBAS(PIDsDict):
     analysis = ""
     proc = ["powershell.exe","wscript.exe","cscript.exe","mshta.exe","wmic.exe"]
@@ -131,7 +133,7 @@ def DetectLOLBAS(PIDsDict):
         return '\n'.join(lines)  
     else:
         return analysis
-
+# Detect potentialy unwanted applications
 def DetectPUA(PIDsDict):
     analysis = ""
     proc = ["psexec.exe","bloodhound.exe"]
@@ -147,7 +149,7 @@ def DetectPUA(PIDsDict):
     else:
         return analysis
                      
-
+# Main function used to run all the detection rules on input from Stdin or Argument
 def Analysis():
     inputdata = None 
      # Checkin if input is from command-line arguments
@@ -163,13 +165,15 @@ def Analysis():
     if not inputdata:
         print("""Error: No input data was provided. Provide Process data from stdin or as an argument (.\\path\\to\\psscan)""")
 
-
+    # Run all Detection rules
     PIDsDict   =  EnumerateProcessData(inputdata)
     totalanalysis = ""    
     totalanalysis += DetectMasquerading(PIDsDict)
     totalanalysis += DetectLOLBAS(PIDsDict)
     totalanalysis += DetectDiscovery(PIDsDict)
     totalanalysis += DetectPersistences(PIDsDict)
+    totalanalysis += DetectPUA(PIDsDict)
+
 
     if totalanalysis == "":
         return "The modules used didn't detect suspicous activity"
@@ -177,6 +181,6 @@ def Analysis():
         return "\nRaPidAnalytics Detections:" +"\n\n"+totalanalysis
     
 if __name__ == "__main__":
-    print (Analysis() )
+    print (Analysis())
         
 
